@@ -4,124 +4,161 @@
 
 # Workout Tracker Web App
 
-Advanced client-side web app to log workouts with session-based tracking, live timers, rest intervals, and AI recommendations based on historical performance.
+A modern, client-side web application for tracking workouts with real-time statistics, progress visualization, and persistent data storage using localStorage.
+
+## Overview
+
+The Workout Tracker helps users log exercises, track personal records, monitor training volume, and visualize long-term progress through an interactive chart. All data is stored locally in the browser, ensuring privacy and instant access.
 
 ## Files
-- `index.html` - app UI with session controls, active workout panel, and day-grouped log
-- `styles.css` - styling for sessions, timers, day grouping, and responsive layout
-- `script.js` - session management, localStorage, timers, recommendations, and chart rendering
 
-## Run
-1. Open `WorkoutTracker/index.html` in a browser.
-2. Click "Start Workout" to begin a session.
-3. Add sets and track your workout with live timers.
+- **`index.html`** - Main application UI with form inputs, workout log table, and progress chart
+- **`styles.css`** - Responsive styling with CSS variables for theming
+- **`script.js`** - Core application logic: data management, chart rendering, statistics calculation
+- **`README.md`** - This file
 
-## New Features (v2.0)
+## How to Use
 
-### Workout Sessions
-- **Start/End Workout**: Begin and complete a full workout session with automatic timestamping
-- **Live Workout Timer**: Displays elapsed time during active sessions (HH:MM:SS format)
-- **Session Status**: Shows ongoing/completed status for each workout
+1. **Open the Application**: Open `WorkoutTracker/index.html` in any modern web browser
+2. **Log an Exercise**: 
+   - Select an exercise from the dropdown menu
+   - Enter weight (in lbs), number of sets, and reps
+   - Select the date of the workout
+   - Click "Add Entry" to save
+3. **View Your Workouts**: 
+   - Scroll down to see all logged workouts in a table format
+   - View computed statistics (total volume, personal records, etc.)
+4. **Track Progress**: 
+   - Check the progress chart below the log
+   - The chart displays maximum weight per exercise over time
+   - Multiple exercises are shown in different colors
 
-### Exercise Tracking
-- Add multiple sets within a single session
-- Input: Exercise, Weight, Sets, Reps, Rest duration
-- Each set captures volume calculation and rest preferences
-- Remove individual sets before ending workout
+## Features
 
-### Rest Timer
-- **Configurable Rest Intervals**: Set rest time per exercise (default 60s, range 15-120s)
-- **Countdown Display**: Visual timer showing remaining rest in MM:SS format
-- **Alert Notification**: Audio alert or message when rest period completes
-- **Form Locking**: Prevents new set entry while rest timer is active
+### Exercise Logging
+- Dropdown menu with pre-configured exercises (Bench Press, Squat, Deadlift, Overhead Press, Pull Up, Barbell Row, Leg Press, Lat Pulldown, Dumbbell Curl)
+- Input fields for weight, sets, reps, and date
+- Simple one-click entry submission
 
-### Recommendations Engine
-- Analyzes historical session data by exercise
-- **Progressive Overload Algorithm**:
-  - If last session ≥ target reps → suggest +5 lbs
-  - If last session < target reps → suggest same or -2.5 lbs
-- Displays: Recommended weight, sets×reps, session history, average volume
-- Updates dynamically as you add sets in current session
+### Workout Log
+- Table view showing all logged exercises
+- Columns: Date, Exercise, Weight, Sets, Reps, Volume (calculated), Actions
+- Remove individual entries with the "Remove" button
+- Data sorted by date for easy reference
 
-### Day-Based Grouping
-- Workout log organized by date
-- **Collapsible Day Cards**: Expand/collapse to view sessions by day
-- Each day shows total sets count
-- Session cards display:
-  - Start/end times
-  - Completed/ongoing status
-  - All sets with exercise, weight, sets, reps, and volume
-
-### Data Persistence
-- **Dual Storage Model**:
-  - Session format: Full workout objects with metadata in `workoutTrackerSessions`
-  - Legacy format: Flat entries in `workoutTrackerEntries` (backward compatible)
-- Data persists across browser sessions
+### Statistics
+- **Total Sessions**: Count of all workout entries
+- **Total Volume**: Sum of (weight × sets × reps) across all entries
+- **PR Weight**: Personal record (highest weight lifted)
+- **Max Sets**: Highest set count recorded
+- **Max Reps**: Highest rep count recorded
 
 ### Progress Chart
-- Line chart showing max weight per exercise per date
-- Continues to track long-term progress
-- Updated with each workout completion
+- Line chart visualization using Chart.js library
+- Each exercise has a unique color
+- Shows maximum weight per exercise per date
+- Helps identify trends and progression over time
+- Responsive design that adapts to screen size
 
-### Manual Entry (Legacy)
-- Still supports manual single-entry logging for outside-session data
-- Backward compatible with existing data
+### Data Persistence
+- All workouts automatically saved to browser's localStorage
+- Data persists across browser sessions
+- No login or internet connection required
+- Storage key: `workoutTrackerEntries`
 
-## Statistics
-Real-time stats updated after each session:
-- Total Entries (all-time sessions)
-- Total Volume (sum of weight × sets × reps)
-- Personal Record (max weight lifted)
-- Max Sets (highest set count in single exercise)
-- Max Reps (highest rep count in single exercise)
+### Responsive Design
+- Mobile-friendly layout using CSS Grid
+- Adapts to desktop, tablet, and phone screens
+- Touch-friendly input fields and buttons
 
-## Data Model
+## Technical Details
 
-### Session Object
+### Data Structure
+Each entry is stored as a JSON object with the following properties:
 ```json
 {
-  "id": "uuid",
-  "date": "YYYY-MM-DD",
-  "startTime": "ISO-8601",
-  "endTime": "ISO-8601 or null",
-  "setEntries": [
-    {
-      "id": "uuid",
-      "exercise": "Bench Press",
-      "weight": 185,
-      "sets": 3,
-      "reps": 8,
-      "restSec": 60,
-      "elapsedSec": 0,
-      "volume": 4440
-    }
-  ],
-  "status": "completed|ongoing",
-  "notes": ""
+  "id": "unique-uuid",
+  "name": "Exercise Name",
+  "weight": 185,
+  "sets": 3,
+  "reps": 8,
+  "date": "2026-04-02",
+  "createdAt": "2026-04-02T15:30:00Z"
 }
 ```
 
-## Recommendation Algorithm Details
-Tracks per-exercise:
-1. **Max Weight**: Highest weight ever lifted
-2. **Average Sets/Reps**: Baseline for target
-3. **Last Performance**: Most recent set results
+### Storage
+- Entries are stored in `localStorage` with the key `workoutTrackerEntries`
+- Maximum storage is browser-dependent (typically 5-10MB)
+- All data is local to your device
 
-Suggests progressive increases when:
-- Recent reps ≥ target reps → Add 5 lbs
-- Recent reps < target - 2 → Subtract 2.5 lbs (optional deload)
-- Otherwise → Maintain current weight
+### Chart Library
+- Uses Chart.js (loaded via CDN)
+- Line chart displaying weight trends per exercise
+- Automatic color assignment for different exercises
 
-## Browser Storage Keys
-- `workoutTrackerSessions` - Array of session objects (new)
-- `workoutTrackerEntries` - Array of legacy entry objects (backward compat)
+### Browser Compatibility
+- Works on all modern browsers (Chrome, Firefox, Safari, Edge)
+- Requires JavaScript enabled
+- CSS Grid support needed for responsive layout
 
-## Future Enhancements
-1. Backend database for multi-device sync
-2. Form validation (weight/sets/reps within realistic ranges)
-3. Edit completed sessions
-4. Advanced recommendation algorithms (1RM estimation, periodization)
-5. Export data as CSV
-6. Multiple user profiles
-7. Workout templates
-8. Body weight exercises and calisthenics tracking
+## Supported Exercises
+
+The app includes these pre-configured exercises:
+- Bench Press
+- Squat
+- Deadlift
+- Overhead Press
+- Pull Up
+- Barbell Row
+- Leg Press
+- Lat Pulldown
+- Dumbbell Curl
+
+(Additional exercises can be added by editing the `<select>` options in `index.html`)
+
+## Tips for Best Results
+
+1. **Consistent Logging**: Log your workouts immediately after your session for accuracy
+2. **Realistic Goals**: Your personal records and statistics are only as good as your data
+3. **Progressive Overload**: Use the chart to identify where you can increase weight, sets, or reps
+4. **Data Backup**: Periodically take screenshots of your progress chart
+5. **Browser Maintenance**: Don't clear browser data unless you want to reset your workouts
+
+## Future Enhancement Ideas
+
+- Add exercise categories (upper body, lower body, cardio)
+- Export data as CSV or JSON
+- Workout templates for common routines
+- Multiple user profiles
+- Cloud backup option
+- Mobile app version
+- Advanced analytics (1RM estimation, volume trends)
+- Rest timer between sets
+- Exercise notes and form feedback
+
+## Troubleshooting
+
+**"My data disappeared"**
+- Check if you cleared browser history/cache
+- Data is stored in localStorage - clearing it will erase all workouts
+- Use browser DevTools to inspect localStorage if needed
+
+**"Chart is not showing"**
+- Ensure you have internet connection (Chart.js loads from CDN)
+- Check browser console for JavaScript errors
+- Try refreshing the page
+
+**"Can't add entries"**
+- Ensure all fields are filled out
+- Weight, sets, and reps must be valid positive numbers
+- Date must be selected
+- JavaScript must be enabled
+
+## License
+
+This is an educational project created as part of academic coursework.
+
+---
+
+*Last Updated: April 2, 2026*
