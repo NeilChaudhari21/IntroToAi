@@ -1,0 +1,7 @@
+Prompt 2:
+There are issues with the implementation of the python program then. 
+The morse code I have provided is an english sentence that makes sense. 
+There are no spaces in the morse code.
+
+AI Response Sentence:
+the it is in art to as we met me ten met the me be in it as at at

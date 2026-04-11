@@ -1,0 +1,15 @@
+Prompt 1:
+
+Attached dictionary.txt
+
+Write a program to decode the following morse code. 
+The code represents an english sentence. 
+I am attaching a txt file which contains all words in the english dictionary, 
+use it to validate the letters you are decoding to make sure they are valid 
+and form valid words that make sense.
+
+Here is the morse code:
+-.......--.--..-..........----........-..-.-.-----.-....--.--.---.-.-.--.--.....--.-......-...-.-....--.--
+
+AI Response Sentence:
+the eat at it see is on is in art to as we met me ten met the me be in it as at at
