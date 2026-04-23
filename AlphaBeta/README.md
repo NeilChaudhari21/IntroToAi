@@ -1,0 +1,1 @@
+From the empty tic tac toe board, plain minimax visited 549,946 nodes, while alpha beta visited 20,866 nodes. That is about a 26.36 to 1 reduction in the number of nodes explored. The difference happens because alpha beta prunes branches that cannot possibly affect the final minimax choice, so it avoids searching many positions that plain minimax still evaluates.
